@@ -11,4 +11,5 @@ public class NewsRequestDTO {
     private String title;
     private String content;
     private String imageUrl;
+
 }

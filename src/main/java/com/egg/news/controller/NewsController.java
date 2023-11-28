@@ -9,9 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -32,7 +29,8 @@ public class NewsController {
     @PostMapping("/news")
     public News saveNews(@RequestBody NewsRequestDTO newsRequestDTO) {
         News news = new News();
-        news.setTitle(newsRequestDTO.getTitle());
+        String title = newsRequestDTO.getTitle();
+        news.setTitle(title);
         news.setContent(newsRequestDTO.getContent());
         news.setImageUrl(newsRequestDTO.getImageUrl());
 
@@ -43,6 +41,18 @@ public class NewsController {
         News news = newsService.findNewsById(id);
         return ResponseEntity.ok(news);
     }
+
+    @PutMapping("/news/{id}")
+    public ResponseEntity<News> updateNews(@PathVariable Long id, @RequestBody News incomingNews){
+        News news = newsService.findNewsById(id);
+        news.setTitle(incomingNews.getTitle());
+        news.setContent(incomingNews.getContent());
+        news.setImageUrl(incomingNews.getImageUrl());
+        newsService.saveNews(news);
+        return ResponseEntity.ok(news);
+    }
+
+
     @DeleteMapping("/news/{id}")
     public void deleteNews(@PathVariable Long id) {
         newsService.deleteNewsById(id);
